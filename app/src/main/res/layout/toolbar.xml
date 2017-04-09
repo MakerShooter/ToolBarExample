@@ -17,5 +17,6 @@
         android:id="@+id/txtWebLink"
         android:onClick="displayWeb"
         android:layout_marginLeft="10dp"
+        android:paddingLeft="20dp"
         />
     </android.support.v7.widget.Toolbar>

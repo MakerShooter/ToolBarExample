@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ToolBarExample</string>
+    <string name="title_activity_sub">subActivity</string>
 </resources>
