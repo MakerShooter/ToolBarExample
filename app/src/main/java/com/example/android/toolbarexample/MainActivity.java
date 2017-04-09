@@ -1,10 +1,13 @@
 package com.example.android.toolbarexample;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +19,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private TextView txtWebLink;
     Button shareIt;
+    NotificationCompat.Builder notification;
+    private static final int uniqueID = 3456;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
         // Display icon in the toolbar
-       getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
@@ -38,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-
+        //notification part
+        notification = new NotificationCompat.Builder(this);
+        //this close the nofication
+        notification.setAutoCancel(true);
 
     }
 
@@ -50,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-    public void displayWeb(View v){
+
+    public void displayWeb(View v) {
 
         openWebPage("http://uwolnijcialo.pl");
 
@@ -76,22 +85,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void displayMail(View v){
+    public void displayMail(View v) {
         composeEmail();
     }
 
 
-//this is to enable the action of the icon
+    //this is to enable the action of the icon
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_share:
-
+//to create the share activity
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "share it");
                 intent.putExtra(Intent.EXTRA_TEXT, "new trainer");
-                startActivity(Intent.createChooser(intent,"share using"));
+                //this is showing the title
+                startActivity(Intent.createChooser(intent, "share using"));
 
                 return true;
 
@@ -115,6 +125,27 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    public void getNotification(View v){
+
+        //build the notification
+        notification.setSmallIcon(R.drawable.actionbar);
+        notification.setTicker("this is time to train");
+        notification.setContentText("Idzie Ci świetnie przed nami kolejny trening");
+        notification.setContentTitle("Trener Oddechu przypomina");
+        notification.setWhen(System.currentTimeMillis());
+
+        //set the intent to start it
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.setContentIntent(pendingIntent);
+
+
+        //build and issue notification
+        NotificationManager mn = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mn.notify(uniqueID,notification.build());
+
     }
 
 }
